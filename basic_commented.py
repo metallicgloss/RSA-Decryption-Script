@@ -1,6 +1,7 @@
 # Import required modules for program.
 import ast
 from datetime import datetime
+import time
 
 # --------------------------------------------------------------------------- #
 #                                  CONTENTS                                   #
@@ -13,6 +14,7 @@ from datetime import datetime
 # --------------------------------------------------------------------------- #
 
 def bubbleSort(array_to_sort):
+    start = time.time()
     # Bubble Sort function.
 
     # Calculate array length for use in loops.
@@ -34,7 +36,7 @@ def bubbleSort(array_to_sort):
 
                 # Perform swap of positions for two messages.
                 array_to_sort[j], array_to_sort[j + 1] = array_to_sort[j + 1], array_to_sort[j]
-
+    print("Sort Total Time:", time.time() - start)
     # Return array for display to screen.
     return array_to_sort
 # --------------------------------------------------------------------------- #
@@ -48,6 +50,8 @@ communication_transmissions = ast.literal_eval(communication_log.read())
 # Initialise blank list that will store all messages.
 message_list = []
 
+start = time.time()
+    
 for message in communication_transmissions:
     # For each message within the communication log, loop.
 
@@ -116,6 +120,8 @@ for message in communication_transmissions:
 
     # Append whole message to list.
     message_list.append(message_output + " - Private Key: " + str(decryptionkey))
+
+print("Decryption Total Time:", time.time() - start)
 
 # Execute bubble sort on list.
 for message in (bubbleSort(message_list)):

@@ -127,7 +127,9 @@ if __name__ == '__main__':
 
     # Initialise blank list that will store all messages.
     message_list = []
-
+    
+    start = time.time()
+    
     for transmission in communication_transmissions:
         # For each message within the communication log, loop.
         
@@ -140,6 +142,10 @@ if __name__ == '__main__':
         # Append whole message to list.
         message_list.append(message_output + " - Private Key: " + str(decryption_key))
 
+    print("Decryption Total Time:", time.time() - start)
+    
     # Use sorted method to sort list based on the date + time.
     # Method uses timsort, mix of merge and insertion sort. Efficient for larger data sets.
+    start = time.time()
     print(sorted(message_list, key = lambda x: x.split()[0] + " " + x.split()[1]))
+    print("Sort Total Time:", time.time() - start)
