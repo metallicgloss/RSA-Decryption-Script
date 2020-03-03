@@ -21,6 +21,14 @@ class Message:
     #                                __init__                                 #
     #                Initialises message details for the class.               #
     #                                                                         #
+    #                             calculate_length                            #
+    #  Checks odd numbers up to 500 to find two prime factors of public key.  #
+    #                                                                         #
+    #                           calculate_decryption                          #
+    #      Executes mathmatical calculation to determine decryption key.      #
+    #                                                                         #
+    #                                 decrypt                                 #
+    #         Splits encrypted message into characters, decrypts each.        #
     # ----------------------------------------------------------------------- #
 
     # Initialise message class and variables.
