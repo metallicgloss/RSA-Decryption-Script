@@ -15,6 +15,7 @@ import time
 
 def bubbleSort(array_to_sort):
     # Bubble Sort function.
+    # Assisted by reference (11).
 
     # Calculate array length for use in loops.
     array_length = len(array_to_sort)
@@ -61,6 +62,7 @@ for message in communication_transmissions:
     split_list = []
 
     # Algorithm loop to find two prime numbers that go into the public key, the prime factors.
+    # Assisted by references (3, 4, 5)
     for i in range(2, message[0] + 1):
         # Count from numbers 3 to 1 more than the public key.
 
@@ -85,6 +87,7 @@ for message in communication_transmissions:
                 factor.append(i)
 
     # Calculate key length for future calculations.
+    # Assisted by reference (1).
     length = (factor[0] - 1) * (factor[1] - 1)
 
     # Algorithm loop to find decryption key.
@@ -106,6 +109,7 @@ for message in communication_transmissions:
         # For every set of characters, append to list.
 
         # Append to list the section of the string.
+        # Assisted by reference (2).
         split_list.append(message[2][i:i + split_length] )
 
     for character in split_list:
@@ -113,6 +117,7 @@ for message in communication_transmissions:
 
         # Perform the decryption on the character, convert the result into a plaintext string from ASCII.
         # Extremely CPU intensive calculation due to scale of numbers. Will use the most CPU time of whole program.
+        # Assisted by reference (1).
         decrypt = chr((int(character) ** int(decryptionkey)) % int(message[0]))
 
         # Append decrypted character to message result.

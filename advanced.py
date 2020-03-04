@@ -49,8 +49,7 @@ if __name__ == '__main__':
         message_handler = Message(transmission[0], transmission[1], transmission[2])
         message_output, decryption_key = message_handler.decrypt()
         message_list.append(message_output + " - Private Key: " + str(decryption_key))
-    decryption_end = time.time()
-    sort_start = time.time()
+    sort_start, decryption_end = time.time()
     for message in (sorted(message_list, key = lambda x: x.split()[0] + " " + x.split()[1])):
         print(message)
     sort_end = time.time()

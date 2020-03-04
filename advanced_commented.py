@@ -46,6 +46,7 @@ class Message:
     # Calculate the length that corresponds to public key.
     def calculate_length(self):
         # Algorithm loop to find two prime numbers that go into the public key, the prime factors.
+        # Assisted by references (3, 4, 5).
         for i in range(3, 500, 2):
             # Count from numbers 3 to fixed number for excise of 500. Loop in steps of 2 to skip even numbers.
 
@@ -69,7 +70,8 @@ class Message:
                     self._factors.append(i)
 
         # RSA Mathmatical Calculation
-        # Calculate key length for future calculations.
+        # Calculate key length for future calculations
+        # Assisted by reference (1).
         self._length = (self._factors[0] - 1) * (self._factors[1] - 1)
 
     # Calculate the decryption key (private key).
@@ -98,6 +100,7 @@ class Message:
             # For every set of characters, append to list.
 
             # Append to list the section of the string.
+            # Assisted by reference (2).
             split_list.append(self.encrypted_message[i:i+len(str(self.public_key))])
 
         # Leverage Python MultiProcessing technique to make use of additional application threads.
@@ -105,6 +108,7 @@ class Message:
         # Within CPU limitations, split processing of decryption into different threads. Current value decrypts 32 characters at a time.
         with Pool(32) as multi_processor:
             # Join together the array returned from running decrypt_character in parralell. Passes list of characters to function.
+            # Assisted by references (7, 9, 10).
             self._decrypted_message = ''.join(multi_processor.map(self.decrypt_character, split_list))
 
         # Return data.
@@ -113,11 +117,13 @@ class Message:
     def decrypt_character(self, character):
         # Function to be leveraged during multi-processing. Decrypts character using decryption key.
 
+        # Assisted by reference (6).
         if character not in self._decrypted_dictionary:
             # If character is not present in the dictionary, it hasn't been decrypted before.
             # If character has already been decrypted, will skip over CPU intensive calculation and read directly from dictionary.
 
             # Perform the decryption on the character, convert the result into a plaintext string from ASCII.
+            # Assisted by reference (1).
             self._decrypted_dictionary[character] = chr((int(character) ** int(self._decryption_key)) % int(self.public_key))
 
         # Return decrypted character.
@@ -150,13 +156,12 @@ if __name__ == '__main__':
         # Append whole message to list.
         message_list.append(message_output + " - Private Key: " + str(decryption_key))
 
-
     # Restart time under new variable.
-    decryption_end = time.time()
-    sort_start = time.time()
+    sort_start, decryption_end = time.time()
 
     # Use sorted method to sort list based on the date + time.
     # Method uses timsort, mix of merge and insertion sort. Efficient for larger data sets.
+    # Assisted by reference (7).
     for message in (sorted(message_list, key = lambda x: x.split()[0] + " " + x.split()[1])):
         print(message)
 
