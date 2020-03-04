@@ -26,7 +26,7 @@ class Message:
     #  Checks odd numbers up to 500 to find two prime factors of public key.  #
     #                                                                         #
     #                           calculate_decryption                          #
-    #      Executes mathmatical calculation to determine decryption key.      #
+    #      Executes mathematical calculation to determine decryption key.     #
     #                                                                         #
     #                                 decrypt                                 #
     #         Splits encrypted message into characters, decrypts each.        #
@@ -69,7 +69,7 @@ class Message:
                     # If prime flag has not been cancelled, append factor to list.
                     self._factors.append(i)
 
-        # RSA Mathmatical Calculation
+        # RSA Mathematical Calculation
         # Calculate key length for future calculations
         # Assisted by reference (1).
         self._length = (self._factors[0] - 1) * (self._factors[1] - 1)
@@ -80,7 +80,7 @@ class Message:
         for i in range(self._length + 1, self._length * 2, 2):
             # Loop from length + 1 (odd number) to 2 times the length. Loops in steps of 2 to skip all even numbers that would never be prime.
 
-            # Mathmatical calculation to validate key.
+            # Mathematical calculation to validate key.
             if((i * self.encryption_key) % self._length == 1):
                 # If loop number times the encryption key, modded by the length returns a value of 1.
 
@@ -107,7 +107,7 @@ class Message:
         # The calculation performed by decrypt_character is extremely CPU intensive calculation (takes >98% of the total program execution time) due to scale of numbers.
         # Within CPU limitations, split processing of decryption into different threads. Current value decrypts 32 characters at a time.
         with Pool(32) as multi_processor:
-            # Join together the array returned from running decrypt_character in parralell. Passes list of characters to function.
+            # Join together the array returned from running decrypt_character in parallel. Passes list of characters to function.
             # Assisted by references (7, 9, 10).
             self._decrypted_message = ''.join(multi_processor.map(self.decrypt_character, split_list))
 
@@ -121,8 +121,9 @@ class Message:
         if character not in self._decrypted_dictionary:
             # If character is not present in the dictionary, it hasn't been decrypted before.
             # If character has already been decrypted, will skip over CPU intensive calculation and read directly from dictionary.
+            # NB: Need to test dictionary use between threads. Unable to complete in given time limit.
 
-            # Perform the decryption on the character, convert the result into a plaintext string from ASCII.
+            # Perform the decryption on the character, convert the result into a plain-text string from ASCII.
             # Assisted by reference (1).
             self._decrypted_dictionary[character] = chr((int(character) ** int(self._decryption_key)) % int(self.public_key))
 

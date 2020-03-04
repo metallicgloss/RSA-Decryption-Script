@@ -56,7 +56,7 @@ decryption_start = time.time()
 for message in communication_transmissions:
     # For each message within the communication log, loop.
 
-    # Clear / initilise variables for loop/
+    # Clear / initialise variables for loop/
     factor = []
     message_output = ""
     split_list = []
@@ -94,7 +94,7 @@ for message in communication_transmissions:
     for i in range(length, length * 3):
         # Loop from length to 3 times the length.
 
-        # Mathmatical calculation to validate key.
+        # Mathematical calculation to validate key.
         if((i * message[1]) % (length) == 1):
             # If loop number times the encryption key, modded by the length returns a value of 1.
 
@@ -115,7 +115,7 @@ for message in communication_transmissions:
     for character in split_list:
         # For each character in the list.
 
-        # Perform the decryption on the character, convert the result into a plaintext string from ASCII.
+        # Perform the decryption on the character, convert the result into a plain-text string from ASCII.
         # Extremely CPU intensive calculation due to scale of numbers. Will use the most CPU time of whole program.
         # Assisted by reference (1).
         decrypt = chr((int(character) ** int(decryptionkey)) % int(message[0]))
