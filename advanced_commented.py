@@ -1,13 +1,14 @@
 # Import required modules for program.
 import ast
 import time
+from multiprocessing import Pool
 
 # --------------------------------------------------------------------------- #
 #                                  CONTENTS                                   #
 #                            1. Message Class                                 #
 #                            2. Main Program Init                             #
 # --------------------------------------------------------------------------- #
-    
+
 # --------------------------------------------------------------------------- #
 #                               1. Message Class                              #
 # --------------------------------------------------------------------------- #
@@ -41,13 +42,13 @@ class Message:
         self._decrypted_dictionary = {}
         self._length = 0
         self._factors = []
-        
+
     # Calculate the length that corresponds to public key.
     def calculate_length(self):
         # Algorithm loop to find two prime numbers that go into the public key, the prime factors.
         for i in range(3, 500, 2):
             # Count from numbers 3 to fixed number for excise of 500. Loop in steps of 2 to skip even numbers.
-            
+
             if(self.public_key % i == 0):
                 # If the primary key, when modded by the loop number, has a remainder of 0.
 
@@ -55,22 +56,22 @@ class Message:
                 prime_number = True
                 for n in range(3, (i // 2 + 1), 2):
                     # Loop from number 3 to one more than the square root of parent loop number in steps of 2 to skip even numbers.
-                    
+
                     if(i % n == 0):
                         # If the parent loop number, when divided by the loop number, has a remainder of 0.
 
                         # Reset prime flag to 0 and break loop.
                         prime_number = False
                         break
-                    
+
                 if (prime_number == True):
                     # If prime flag has not been cancelled, append factor to list.
                     self._factors.append(i)
-        
+
         # RSA Mathmatical Calculation
-        # Calculate key length for future calculations.          
+        # Calculate key length for future calculations.
         self._length = (self._factors[0] - 1) * (self._factors[1] - 1)
-        
+
     # Calculate the decryption key (private key).
     def calculate_decryption(self):
         # Algorithm loop to find decryption key.
@@ -84,75 +85,81 @@ class Message:
                 # Set decryption key and break loop.
                 self._decryption_key = i
                 break
-        
+
     # Decrypt message.
     def decrypt(self):
         # Call methods to generate the length and decryption key that match public key.
         self.calculate_length()
         self.calculate_decryption()
-        
+
         split_list = []
-        
+
         for i in range(0, len(self.encrypted_message), len(str(self.public_key))):
             # For every set of characters, append to list.
 
             # Append to list the section of the string.
             split_list.append(self.encrypted_message[i:i+len(str(self.public_key))])
-            
-        for character in split_list:
-            # For each character in the list.
-            
-            if character not in self._decrypted_dictionary:
-                # If character is not present in the dictionary, it hasn't been decrypted before.
-                # If character has already been decrypted, will skip over CPU intensive calculation and read directly from dictionary.
-                
-                # Perform the decryption on the character, convert the result into a plaintext string from ASCII.
-                # Extremely CPU intensive calculation due to scale of numbers. Will use the most CPU time of whole program.
-                self._decrypted_dictionary[character] = chr((int(character) ** int(self._decryption_key)) % int(self.public_key))
-            
-            # Append decrypted character to build up message.
-            self._decrypted_message = self._decrypted_message + self._decrypted_dictionary[character]
-        
+
+        # Leverage Python MultiProcessing technique to make use of additional application threads.
+        # The calculation performed by decrypt_character is extremely CPU intensive calculation (takes >98% of the total program execution time) due to scale of numbers.
+        # Within CPU limitations, split processing of decryption into different threads. Current value decrypts 32 characters at a time.
+        with Pool(32) as multi_processor:
+            # Join together the array returned from running decrypt_character in parralell. Passes list of characters to function.
+            self._decrypted_message = ''.join(multi_processor.map(self.decrypt_character, split_list))
+
         # Return data.
         return [self._decrypted_message, self._decryption_key]
+
+    def decrypt_character(self, character):
+        # Function to be leveraged during multi-processing. Decrypts character using decryption key.
+
+        if character not in self._decrypted_dictionary:
+            # If character is not present in the dictionary, it hasn't been decrypted before.
+            # If character has already been decrypted, will skip over CPU intensive calculation and read directly from dictionary.
+
+            # Perform the decryption on the character, convert the result into a plaintext string from ASCII.
+            self._decrypted_dictionary[character] = chr((int(character) ** int(self._decryption_key)) % int(self.public_key))
+
+        # Return decrypted character.
+        return self._decrypted_dictionary[character]
 # --------------------------------------------------------------------------- #
 #                             2. Main Program Init                            #
 # --------------------------------------------------------------------------- #
 
 if __name__ == '__main__':
-    
+
     # Load communication log file, parse string contents to list format.
     communication_log = open("log.txt", "r")
     communication_transmissions = ast.literal_eval(communication_log.read())
 
     # Initialise blank list that will store all messages.
     message_list = []
-    
+
     # Set start time for decryption.
     decryption_start = time.time()
-    
+
     for transmission in communication_transmissions:
         # For each message within the communication log, loop.
-        
+
         # Initialise message object.
         message_handler = Message(transmission[0], transmission[1], transmission[2])
-        
+
         # Execute decryption method on object.
         message_output, decryption_key = message_handler.decrypt()
-        
+
         # Append whole message to list.
         message_list.append(message_output + " - Private Key: " + str(decryption_key))
 
-    
+
     # Restart time under new variable.
     decryption_end = time.time()
     sort_start = time.time()
-    
+
     # Use sorted method to sort list based on the date + time.
     # Method uses timsort, mix of merge and insertion sort. Efficient for larger data sets.
     for message in (sorted(message_list, key = lambda x: x.split()[0] + " " + x.split()[1])):
         print(message)
-    
+
     # End time for sort.
     sort_end = time.time()
 
