@@ -121,7 +121,8 @@ class Message:
         if character not in self._decrypted_dictionary:
             # If character is not present in the dictionary, it hasn't been decrypted before.
             # If character has already been decrypted, will skip over CPU intensive calculation and read directly from dictionary.
-            # NB: Need to test dictionary use between threads. Unable to complete in given time limit.
+            # NB: Need to test dictionary use between threads, potential for some threads to process character decryption at the same time.
+            # NB: Unable to complete testing in given time limit. To revert to just using dictionary, add loop to line 122 for chars in message to call function.
 
             # Perform the decryption on the character, convert the result into a plain-text string from ASCII.
             # Assisted by reference (1).
@@ -158,7 +159,7 @@ if __name__ == '__main__':
         message_list.append(message_output + " - Private Key: " + str(decryption_key))
 
     # Restart time under new variable.
-    sort_start, decryption_end = time.time()
+    sort_start = decryption_end = time.time()
 
     # Use sorted method to sort list based on the date + time.
     # Method uses timsort, mix of merge and insertion sort. Efficient for larger data sets.
