@@ -1,5 +1,6 @@
 import ast
 from datetime import datetime
+import time
 def bubbleSort(array_to_sort):
     array_length = len(array_to_sort)
     for i in range(array_length):
@@ -12,6 +13,7 @@ def bubbleSort(array_to_sort):
 communication_log = open("log.txt", "r")
 communication_transmissions = ast.literal_eval(communication_log.read())
 message_list = []
+decryption_start = time.time()
 for message in communication_transmissions:
     factor = []
     message_output = ""
@@ -37,5 +39,10 @@ for message in communication_transmissions:
         decrypt = chr((int(character) ** int(decryptionkey)) % int(message[0]))
         message_output = message_output + decrypt
     message_list.append(message_output + " - Private Key: " + str(decryptionkey))
+decryption_end = time.time()
+sort_start = time.time()
 for message in (bubbleSort(message_list)):
     print(message)
+sort_end = time.time()
+print("Decryption Total Time:", decryption_end - decryption_start)
+print("Sort Total Time:", sort_end - sort_start)

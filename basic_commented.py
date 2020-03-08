@@ -36,7 +36,7 @@ def bubbleSort(array_to_sort):
 
                 # Perform swap of positions for two messages.
                 array_to_sort[j], array_to_sort[j + 1] = array_to_sort[j + 1], array_to_sort[j]
-                
+
     # Return array for display to screen.
     return array_to_sort
 # --------------------------------------------------------------------------- #
@@ -52,7 +52,7 @@ message_list = []
 
 # Set start time for decryption.
 decryption_start = time.time()
-    
+
 for message in communication_transmissions:
     # For each message within the communication log, loop.
 
